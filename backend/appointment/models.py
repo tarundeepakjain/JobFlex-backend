@@ -1,25 +1,18 @@
 from django.db import models
+
 class User(models.Model):
     U_ID = models.AutoField(primary_key=True)
     uname = models.CharField(max_length=100)
     email = models.EmailField(max_length=255, unique=True)
     password_hash = models.TextField()
+
     class Meta:
         db_table = 'user'
+
     def __str__(self):
         return self.uname
-class Jobs(models.Model):
-    job_id = models.AutoField(primary_key=True)
-    companyname = models.CharField(max_length=150)
-    jobtitle = models.CharField(max_length=150)
-    location = models.CharField(max_length=150, null=True, blank=True)
-    salary = models.CharField(max_length=100, null=True, blank=True)
-    postedat = models.DateTimeField(auto_now_add=True)
-    link_to_apply = models.TextField(null=True, blank=True)
-    class Meta:
-        db_table = 'jobs'
-    def __str__(self):
-        return f"{self.jobtitle} at {self.companyname}"
+
+
 class Application(models.Model):
     STATUS_CHOICES = [
         ('Applied', 'Applied'),
@@ -27,8 +20,8 @@ class Application(models.Model):
         ('Offered', 'Offered'),
         ('Rejected', 'Rejected'),
     ]
-    id = models.IntegerField(unique=True)
-    APP_ID = models.AutoField(primary_key=True) 
+    id = models.IntegerField(unique=True,default=0)
+    APP_ID = models.AutoField(primary_key=True)
     jobrole = models.CharField(max_length=150)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Applied')
     changed_at = models.DateTimeField(auto_now=True)
