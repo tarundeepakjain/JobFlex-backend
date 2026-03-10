@@ -57,9 +57,14 @@ INSTALLED_APPS = [
 # Local apps
 'application',
 'job_roles',
+
+'accounts',
+'job_scraper',
+
 'user',
 'emails',
 'blog',
+
 
 ]
 
