@@ -34,7 +34,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # ================================
 
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 # Local apps
 'appointment',
 'job_roles',
+'accounts',
 
 ]
 
@@ -189,10 +190,9 @@ REST_FRAMEWORK = {
 'rest_framework.permissions.AllowAny',
 ],
 
-'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.BasicAuthentication',
-],
+"DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ), 
 
 
 }
@@ -204,3 +204,5 @@ REST_FRAMEWORK = {
 # ================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'accounts.User'
