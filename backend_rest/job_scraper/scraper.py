@@ -1,5 +1,7 @@
 # job_scraper/scraper.py
 
+import os
+
 import requests
 import urllib.parse
 from bs4 import BeautifulSoup
@@ -7,8 +9,8 @@ from fake_useragent import UserAgent
 import time
 import random
 
-SCRAPE_DO_TOKEN = "9ad7dd6fdf0b41b79890cc484d5218ea7ef605bea67"  # 🔴 Put your real token here
 
+SCRAPE_DO_TOKEN = os.getenv("scrape_do_token")  
 ua = UserAgent()
 
 
