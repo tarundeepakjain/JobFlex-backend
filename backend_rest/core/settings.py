@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 
 # ================================
-
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG") == "True"
@@ -178,9 +178,11 @@ STATIC_URL = 'static/'
 # CORS SETTINGS (FOR NEXT.JS)
 
 # ================================
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
-CORS_ALLOW_ALL_ORIGINS = True
-
+CORS_ALLOW_CREDENTIALS = True
 # ================================
 
 # DJANGO REST FRAMEWORK SETTINGS
@@ -193,8 +195,8 @@ REST_FRAMEWORK = {
 ],
 
 "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ), 
+        "user.authentication.CookieJWTAuthentication",
+    ),
 
 
 }
