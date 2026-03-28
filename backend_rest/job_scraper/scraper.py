@@ -1,5 +1,3 @@
-# job_scraper/scraper.py
-
 import os
 
 import requests
@@ -9,18 +7,12 @@ from fake_useragent import UserAgent
 import time
 import random
 
-
 SCRAPE_DO_TOKEN = os.getenv("scrape_do_token")  
 ua = UserAgent()
 
 
 def get_html_with_scrape_do(target_url):
-    """
-    VIVA:
-    Sends target URL to scrape.do proxy.
-    Retries 3 times if request fails or times out.
-    render=true executes JavaScript before returning HTML.
-    """
+
     encoded_url = urllib.parse.quote(target_url)
 
     proxy_url = (
@@ -33,8 +25,6 @@ def get_html_with_scrape_do(target_url):
     )
 
     headers = {"User-Agent": ua.random}
-
-    # VIVA: Retry 3 times if request fails or times out
     for attempt in range(3):
         try:
             print(f"[Scraper] Attempt {attempt + 1}...")
@@ -75,56 +65,55 @@ def scrape_internshala_jobs(query="python", location="india"):
             row_items[-1] span                      ← experience
     """
 
-    # Step 1: Build URL
+    #Build URL
     base_url = f"https://internshala.com/jobs/{query}-jobs-in-{location}"
     print(f"[Scraper] Fetching: {base_url}")
 
-    # Step 2: Fetch HTML
+    #Fetch HTML
     html = get_html_with_scrape_do(base_url)
     if not html:
         print("[Scraper] Failed to fetch HTML.")
         return []
 
-    # Step 3: Parse HTML
+    #Parse HTML
     soup = BeautifulSoup(html, "lxml")
 
     jobs = []
 
-    # Step 4: Find all job cards
+    #Find all job cards
     job_cards = soup.find_all("div", class_="individual_internship_job")
     print(f"[Scraper] Found {len(job_cards)} job cards")
 
-    # Step 5: Extract data from each card
+    #Extract data from each card
     for card in job_cards:
         try:
-            # Go UP to parent div to get title + company
-            # VIVA: find_parent() traverses UP the HTML tree
+        
             parent = card.find_parent("div", class_="internship_meta")
 
-            # ── Job Title ─────────────────────────────────
+            # job title
             title_tag = parent.find("h3", class_="job-internship-name") if parent else None
             title = title_tag.text.strip() if title_tag else "N/A"
 
-            # ── Company Name ──────────────────────────────
+            # company name
             company_tag = parent.find("p", class_="company-name") if parent else None
             company = company_tag.text.strip() if company_tag else "N/A"
 
-            # ── Location ──────────────────────────────────
+            
             location_tag = card.find("p", class_="locations")
             location_text = location_tag.text.strip() if location_tag else "N/A"
 
-            # ── Salary ────────────────────────────────────
+            #Salary 
             salary_tag = card.find("span", class_="desktop")
             salary = salary_tag.text.strip() if salary_tag else "Not Disclosed"
 
-            # ── Experience ────────────────────────────────
+            #Experience
             row_items = card.find_all("div", class_="row-1-item")
             experience = "N/A"
             if len(row_items) >= 1:
                 exp_span = row_items[-1].find("span")
                 experience = exp_span.text.strip() if exp_span else "N/A"
 
-            # ── Job URL ───────────────────────────────────
+            #Job URL 
             link_tag = parent.find("a", class_="job-title-href") if parent else None
             job_url = (
                 "https://internshala.com" + link_tag["href"]
