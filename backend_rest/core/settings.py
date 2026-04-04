@@ -190,7 +190,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+# Allow Chrome extension requests in development
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
+
+# Allow Authorization header for extension Bearer token
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'authorization',
+    'content-type',
+    'origin',
+    'x-csrftoken',
+]
 # ================================
 
 # DJANGO REST FRAMEWORK SETTINGS
@@ -204,6 +217,7 @@ REST_FRAMEWORK = {
 
 "DEFAULT_AUTHENTICATION_CLASSES": (
         "user.authentication.CookieJWTAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 
 

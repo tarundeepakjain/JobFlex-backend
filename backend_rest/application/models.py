@@ -4,17 +4,23 @@ from user.models import User
 class Application(models.Model):
     STATUS_CHOICES = [
         ('Applied', 'Applied'),
+        ('Shortlisted', 'Shortlisted'),
         ('Interview', 'Interview'),
-        ('Offered', 'Offered'),
+        ('Offer', 'Offer'),
+        ('Hired', 'Hired'),
         ('Rejected', 'Rejected'),
     ]
-    id = models.IntegerField(unique=True, default=0)
+
     APP_ID = models.AutoField(primary_key=True)
+    id = models.IntegerField(null=True, blank=True)  # company's job posting number e.g. Microsoft 200031626
     jobrole = models.CharField(max_length=150)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Applied')
-    changed_at = models.DateTimeField(auto_now=True)
-    link = models.TextField(null=True, blank=True)
     company = models.CharField(max_length=150, null=True, blank=True)
+    link = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Applied')
+    platform = models.CharField(max_length=100, null=True, blank=True)  # LinkedIn, Microsoft, etc.
+    location = models.CharField(max_length=200, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    changed_at = models.DateTimeField(auto_now=True)
     U_ID = models.ForeignKey(User, on_delete=models.CASCADE, db_column='U_ID')
 
     class Meta:
