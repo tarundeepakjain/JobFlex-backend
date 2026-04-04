@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ================================
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 SECRET_KEY = os.getenv("SECRET_KEY")
-
+REDIS_URL=os.getenv("REDIS_URL")
 DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ['*']
@@ -195,14 +195,8 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
-
-# Allow Authorization header for extension Bearer token
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'authorization',
-    'content-type',
-    'origin',
-    'x-csrftoken',
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173"
 ]
 # ================================
 
