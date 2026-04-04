@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ================================
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 SECRET_KEY = os.getenv("SECRET_KEY")
-
+REDIS_URL=os.getenv("REDIS_URL")
 DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ['*']
@@ -191,6 +191,9 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173"
+]
 # ================================
 
 # DJANGO REST FRAMEWORK SETTINGS

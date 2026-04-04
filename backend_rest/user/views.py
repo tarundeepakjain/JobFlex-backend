@@ -14,10 +14,14 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from django.conf import settings
+from redis_client import redis_client
 from .services.leetcode import fetch_leetcodeData 
 from .services.codeforces import fetch_CFData
+
 GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
 User = get_user_model()
+
+
 @api_view(["GET"])
 def fetch_leetcode(request,username):
     data=fetch_leetcodeData(username)
@@ -127,6 +131,7 @@ def register(request):
 @permission_classes([IsAuthenticated])
 def me(request):
     user = request.user
+    print(user)
     return Response({
         "id": user.U_ID,
         "uname": user.uname,
@@ -149,7 +154,7 @@ def login(request):
     refresh = RefreshToken.for_user(user)
     access_token = str(refresh.access_token)
     refresh_token = str(refresh)
-
+    
     response = Response({
         "message": "Login successful",
         "user": {
