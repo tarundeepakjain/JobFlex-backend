@@ -10,12 +10,24 @@ from google.auth.transport import requests
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from django.conf import settings
-
+from .services.leetcode import fetch_leetcodeData 
+from .services.codeforces import fetch_CFData
 GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID
 User = get_user_model()
+@api_view(["GET"])
+def fetch_leetcode(request,username):
+    data=fetch_leetcodeData(username)
+    return Response(data) 
+
+@api_view(["GET"])
+def fetch_codeforces(request,username):
+    data=fetch_CFData(username)
+    return Response(data)
+
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -171,30 +183,32 @@ def login(request):
 def logout(request):
     response = Response({"message": "Logged out"})
     response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
     return response
+
+
 @api_view(["POST"])
-@permission_classes([AllowAny])
-def extension_login(request):
-    email = request.data.get("email")
-    password = request.data.get("password")
+def refresh_token(request):
+    refresh_token = request.COOKIES.get("refresh_token")
+
+    if not refresh_token:
+        return Response({"error": "No refresh token"}, status=401)
 
     try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return Response({"error": "Invalid credentials"}, status=401)
+        refresh = RefreshToken(refresh_token)
+        access_token = str(refresh.access_token)
 
-    if not user.check_password(password):
-        return Response({"error": "Invalid credentials"}, status=401)
+        response = Response({"message": "Token refreshed"})
 
-    refresh = RefreshToken.for_user(user)
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=False,
+            samesite="Lax"
+        )
 
-    return Response({
-        "success": True,
-        "access": str(refresh.access_token),
-        "refresh": str(refresh),
-        "user": {
-            "id": user.U_ID,
-            "uname": user.uname,
-            "email": user.email
-        }
-    })
+        return response
+
+    except Exception:
+        return Response({"error": "Invalid refresh token"}, status=401)
