@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/scraper/', include('job_scraper.urls')),
     path('api/applications/', include('application.urls')),  # NEW
     path('gmail/', include('gmail.urls')),
+    path('api/blogs/', include('blog.urls')),
 ]
