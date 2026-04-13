@@ -34,6 +34,9 @@ redis
 transformers
 torch
 accelerate
+pymupdf
+sentence-transformers
+supabase
 
 # Google APIs (kept unpinned intentionally)
 google-auth-oauthlib
