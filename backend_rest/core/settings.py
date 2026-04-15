@@ -193,6 +193,7 @@ STATIC_URL = 'static/'
 # ================================
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+     "chrome-extension://<your-extension-id>"
 ]
 
 # Allow Chrome extension requests in development

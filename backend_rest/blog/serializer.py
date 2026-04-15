@@ -16,10 +16,11 @@ class BlogSerializer(serializers.ModelSerializer):
     uname = serializers.SerializerMethodField()
     upvote_count = serializers.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
+    is_upvoted = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Blog
-        fields = ['id', 'title', 'blogtext', 'U_ID', 'uname', 'upvote_count', 'comments']
+        fields = ['id', 'title', 'blogtext', 'U_ID', 'uname','is_upvoted', 'upvote_count', 'comments']
 
     def get_uname(self, obj):
         user = getattr(obj, "U_ID", None)
